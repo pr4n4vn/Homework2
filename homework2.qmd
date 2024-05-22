@@ -1,0 +1,33 @@
+---
+title: "Programming in Base R"
+format: html
+editor: visual
+---
+
+## Task 1 - Basic Vector Practice
+```{r}
+#1
+pretreatment <- c(130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135)
+
+posttreatment <- c(114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113)
+
+#2
+names(pretreatment) = paste("Subject", 1:20, sep = "_")
+names(posttreatment) = paste("Subject", 1:20, sep = "_")
+pretreatment
+posttreatment
+
+#3
+deltabloodpressure = c(pretreatment[1:20] - posttreatment[1:20])
+deltabloodpressure
+
+#4
+mean(deltabloodpressure)
+
+#5
+
+
+
+```
+
+
