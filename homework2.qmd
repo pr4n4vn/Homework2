@@ -59,11 +59,11 @@ knitr::kable(my_df)
 ## Task 3: List Practice
 ```{r}
 #1
-names(pre_bp2) <- paste("Subject", 1:10, sep = "_")
-names(post_bp2)<- paste("Subject", 1:10, sep = "_")
 pre_bp2 <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
 post_bp2 <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
 diff_bp2 <- c(pre_bp2[1:10] - post_bp2[1:10])
+names(pre_bp2) <- paste("Subject", 1:10, sep = "_")
+names(post_bp2)<- paste("Subject", 1:10, sep = "_")
 my_df2 <- data.frame(patient = 1:10, pre_bp2, post_bp2, diff_bp2)
 my_df2
 my_df2$post_bp2
@@ -74,11 +74,14 @@ my_list <- list(treatment = my_df, placebo = my_df2)
 my_list$treatment
 my_list[[1]]
 my_list[1]
+my_list$placebo
 
 #3
-my_list[[2]][3]
+my_list[[2]][2]
+my_list$placebo$post_bp2
 ```
-## Task 4
+
+## Task 4 Control Flow Practice
 ```{r}
 #1
 my_df2$status <- character(10)
@@ -88,39 +91,90 @@ my_df
     
 #2
 for(i in 1:20) {
-    if(my_df$post_bp[i] <= 120) {
-      my_df$status[i] = "Optimal" 
-    } else if(my_df$post_bp[i] > 120 & my_df$post_bp[i] <= 130) {
-      my_df$status[i] = "Borderline"
-    } else if(my_df$post_bp[i]> 130) {
-      my_df$status[i] = "High"
+    if(my_list$treatment$post_bp[i] <= 120) {
+      my_list$treatment$status[i] = "Optimal" 
+    } else if(my_list$treatment$post_bp[i] > 120 & my_list$treatment$post_bp[i] <= 130) {
+      my_list$treatment$status[i] = "Borderline"
+    } else if(my_list$treatment$post_bp[i]> 130) {
+      my_list$treatment$status[i] = "High"
     } else {
-      my_df$status[i] = "error"
+      my_list$treatment$status[i] = "error"
     }
 }
-my_df
+
 
 #3
-for(i in 1:20) {
-    if(my_df2$post_bp2[i] <= 120) {
-      my_df2$status[i] = "Optimal" 
-    } else if(my_df2$post_bp2[i] > 120 & my_df2$post_bp2[i] <= 130) {
-      my_df2$status[i] = "Borderline"
-    } else if(my_df2$post_bp2[i]> 130) {
-      my_df2$status[i] = "High"
+for(i in seq_along(my_list$placebo$post_bp2)) {
+    if (my_list$placebo$post_bp2[i] <= 120) {
+      my_list$placebo$status[i] = "Optimal" 
+    } else if(my_list$placebo$post_bp2[i] > 120 & my_list$placebo$post_bp2[i] <= 130) {
+      my_list$placebo$status[i] = "Borderline"
+    } else if(my_list$placebo$post_bp2[i]> 130) {
+      my_list$placebo$status[i] = "High"
     } else {
-      my_df2$status[i] = "error"
+      my_list$placebo$status[i] = "error"
     }
 }
-
-my_df2
+my_list
 ```
 
 ##Task 5
 ```{r}
 #1
-summarizer <- function(dflist, summary = mean, ) {
-  if(!is.vector())
+
+summary_data <- function(my_list, stat = "mean") {
+
+  treatment_df <- my_list$treatment
+  placebo_df <- my_list$placebo
+  
+  my_fun <- get(stat)
+  
+  summarize_columns <- c("pre", "post", "diff")
+  
+  summarize_df <- function(my_df) {
+    sapply(summarize_columns, function(col) {
+      if (col %in% colnames(my_df)) {
+        return(my_fun(my_df[[col]], na.rm = TRUE))
+      } else {
+        return(NA)
+      }
+  } , USE.NAMES = FALSE)
+  
+  }
+  
+  summarize_df2 <- function(my_df2) {
+    sapply(summarize_columns, function(col) {
+      if (col %in% colnames(my_df2)) {
+        return(my_fun(my_df2[[col]], na.rm = TRUE))
+      } else {
+        return(NA)
+      }
+  } , USE.NAMES = FALSE)
+  
+  }
+  
+  names_summary <- c(paste0("treatment_", summarize_columns), 
+                     paste0("placebo_",summarize_columns))
+  
+  treatment_summary <- summarize_df(treatment_df)
+  placebo_summary <- summarize_df2(placebo_df)
+  
+  values_summary <- c(treatment_summary, placebo_summary)
+  
+  names(names_summary) <- names_summary
+  
+  return(values_summary)
 }
+
+treatment_df <- my_list$treatment
+placebo_df <- my_list$placebo
+
+my_list <- list(treatment = treatment_df, placebo = placebo_df)
+
+result_mean <- summary_data(my_list)
+print(result_mean)
+
+result_sd <- summary_data(my_list, stat = "sd")
+print(result_sd)
 ```
 
