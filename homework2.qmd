@@ -131,21 +131,10 @@ summary_data <- function(my_list, stat = "mean") {
   
   summarize_columns <- c("pre", "post", "diff")
   
-  summarize_df <- function(my_df) {
+  summarize_df <- function(df) {
     sapply(summarize_columns, function(col) {
-      if (col %in% colnames(my_df)) {
-        return(my_fun(my_df[[col]], na.rm = TRUE))
-      } else {
-        return(NA)
-      }
-  } , USE.NAMES = FALSE)
-  
-  }
-  
-  summarize_df2 <- function(my_df2) {
-    sapply(summarize_columns, function(col) {
-      if (col %in% colnames(my_df2)) {
-        return(my_fun(my_df2[[col]], na.rm = TRUE))
+      if (col %in% colnames(df)) {
+        return(my_fun(df[[col]], na.rm = TRUE))
       } else {
         return(NA)
       }
@@ -157,15 +146,28 @@ summary_data <- function(my_list, stat = "mean") {
                      paste0("placebo_",summarize_columns))
   
   treatment_summary <- summarize_df(treatment_df)
-  placebo_summary <- summarize_df2(placebo_df)
+  placebo_summary <- summarize_df(placebo_df)
   
   values_summary <- c(treatment_summary, placebo_summary)
   
   names(names_summary) <- names_summary
   
+  summary_results <- list(
+   treatment_pre = treatment_summary[1],
+   treatment_post = treatment_summary[2],
+   treatment_diff = treatment_summary[3],
+   placebo_pre = placebo_summary[1],
+   placebo_post = placebo_summary[2],
+   placebo_diff = placebo_summary[3]
+  )
+  
   return(values_summary)
 }
 
+
+
+
+#2
 treatment_df <- my_list$treatment
 placebo_df <- my_list$placebo
 
@@ -176,5 +178,15 @@ print(result_mean)
 
 result_sd <- summary_data(my_list, stat = "sd")
 print(result_sd)
+
+result_var <- summary_data(my_list, stat = "var")
+print(result_var)
+
+result_min <- summary_data(my_list, stat = "min")
+print(result_min)
+
+result_max <- summary_data(my_list, stat = "max")
+print(result_max)
+
 ```
 
