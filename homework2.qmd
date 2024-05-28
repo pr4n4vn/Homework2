@@ -5,6 +5,7 @@ editor: visual
 ---
 
 ## Task 1 - Basic Vector Practice
+
 ```{r}
 #1
 pre_bp <- c(130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135)
@@ -54,9 +55,10 @@ my_df
 knitr::kable(my_df)
 
   
-``` 
+```
 
 ## Task 3: List Practice
+
 ```{r}
 #1
 pre_bp2 <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
@@ -82,6 +84,7 @@ my_list$placebo$post_bp2
 ```
 
 ## Task 4 Control Flow Practice
+
 ```{r}
 #1
 my_df2$status <- character(10)
@@ -119,6 +122,7 @@ my_list
 ```
 
 ##Task 5
+
 ```{r}
 #1
 
@@ -189,4 +193,3 @@ result_max <- summary_data(my_list, stat = "max")
 print(result_max)
 
 ```
-
